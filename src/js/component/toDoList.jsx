@@ -3,7 +3,9 @@ import React, { useState, useEffect} from 'react';
 function ToDoList () {
     const [taskList, setTaskList] = useState([]);
     const [inputPlaceholder, setInputPlaceholder] = useState("No tasks, add a task");
-
+    
+    CreateUser();
+    
     useEffect(() => {
         fetch('https://playground.4geeks.com/apis/fake/todos/user/Lisarwisar')
         .then((response) => response.json())
@@ -52,7 +54,7 @@ function ToDoList () {
             <div className="d-flex justify-content-center">
             <button type="button" className="btn btn-danger my-3" onClick={() => {
                 setTaskList([]);
-                UpdateList([]);
+                UpdateList([{label: "example", done: false}]); // API does not accept empty list
             }}>Delete all tasks</button>
             </div>
         </div>
@@ -92,6 +94,29 @@ async function UpdateList (todos) {
           //manejo de errores
           console.log(error);
       });
-}; 
+};
+
+async function CreateUser () {
+    await fetch('https://playground.4geeks.com/apis/fake/todos/user/Lisarwisar', {
+        method: "POST",
+        body: JSON.stringify([]),
+        headers: new Headers({
+          "Content-Type": "application/json"
+        })
+    })
+    .then (response => {
+        console.log(response.ok);
+        console.log(response.status);
+        console.log(response.text);
+        return response.json();
+    })
+    .then(data => {
+        console.log(data);
+    })
+    .catch(error => {
+        console.log(error);
+    })
+
+};
 
 export default ToDoList;
